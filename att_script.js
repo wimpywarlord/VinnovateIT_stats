@@ -2,6 +2,8 @@ const csv = require('csv-parser');
 const fs = require('fs');
 var mongoose = require("mongoose");
 var bodyParser = require("body-parser");
+const { resolve } = require('path');
+const { rejects } = require('assert');
 
 
 mongoose.connect(
@@ -28,34 +30,46 @@ var userSchema = new mongoose.Schema({
 
 var user = mongoose.model("user", userSchema);
 
-entires = []
+let db_users=[]
+let csv_users=[]
 
-fs.createReadStream('boom1.csv')
-  .pipe(csv())
-  .on('data', (row) => {
-    // console.log(row)
-    entires.push(row);
-    user.create(
-        {
-            Name: row["Full Name"],
-            present: 1,
-            total: 1,
-        },
-        function (err, yolo) {
-            if (err) {
-                console.log("DATA IS NOT PUSHED");
-            } else {
-                console.log("DATA HAS BEEN PUSHED");
-            }
-        }
-    );
-  })
-  .on('end', () => {
-    console.log(entires)
-    // entires.forEach(element => {
-        
-    // });  
-    console.log('CSV file successfully processed');
-  });
+const fetching_process = new Promise((resolve,reject) => {
+
+    user.find({}).then((response) => {
+        db_users = response; 
+    })    
+    
+    fs.createReadStream('boom1.csv')
+    .pipe(csv())
+    .on('data', (row) => {
+        csv_users.push(row)
+    })
+    .on('end', () => { 
+        console.log('CSV file successfully processed');
+    });
+
+    console.log(db_users.length)
+    console.log(csv_users.length)
+
+    if (db_users.length!=0 && csv_users.length!=0)
+    {
+        resolve("Fetching Done");
+    }
+    else{
+        reject("Fetching Failed")
+    }
+})
+
+setTimeout(() => {
+    console.log(db_users)
+}, 4000);
+
+
+// fetching_process.then((message) => {
+//     console.log(message)
+// }).catch((message) => {
+//     console.log(message)
+// })
+
 
 
