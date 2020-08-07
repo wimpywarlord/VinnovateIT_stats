@@ -7,7 +7,7 @@
 
 **I pump iron during the day and smash my keyboard in the night.🐙** 
 
-## My Portfolio Website. 🐕
+## VinnovateIT Participation Tracker. 🐕
 
 I am the president of VinnovateIT, and as the new recruits came in, it got difficult to track the participation level of each individual personally. This lead me to make a progress and attedence tracker. The script bascially just processes the excel sheet of attedence which is attained from Microsoft teams and stores important information in the the databse. 
 
